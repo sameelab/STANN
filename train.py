@@ -38,7 +38,7 @@ import tensorflow.keras as keras
 import scanpy as sc
 
 # local functions
-from STANN.models import STANN
+from STANN.models import STANN, BaseSupervisedPCA
 import STANN.utils as utils
 
 logging.getLogger("tensorflow").setLevel(logging.CRITICAL)
@@ -101,9 +101,28 @@ ap.add_argument(
     help="cross-validation"
 )
 
+ap.add_argument(
+    "-pcs",
+    "--pca_components",
+    type=int,
+    default=500,
+    help="Number of components for sPCA"
+)
+
+ap.add_argument(
+    "-top",
+    "--top_features",
+    type=int,
+    default=7000,
+    help="Number of top features to select"
+)
 
 args = vars(ap.parse_args())
 
+
+################PREPARE OUTPUT DIRS###################
+if not os.path.exists(args["output"]):
+        os.makedirs(args["output"])
 
 ################LOAD DATA###################
 
@@ -114,11 +133,10 @@ adata_train = sc.read_h5ad(args["data_train"])
 print("[INFO] loading predict data...")
 adata_predict = sc.read_h5ad(args["data_predict"])
 
-model = STANN(act_fun='tanh',
-              first_dense=160,
-              second_dense=145.0,
-              learning_rate=0.01,input_dim=adata_train.X.shape[1],
-              output_dim=len(adata_train.obs.celltype.unique()))
+
+
+################TRAIN TEST SPLIT###################
+
 
 X_train, Y_train, X_predict = utils.organize_data(adata_train=adata_train,
                                             adata_predict=adata_predict)
@@ -138,14 +156,56 @@ x_train, x_test, y_train, y_test = utils.get_train_test_split(X_train_scaled,
 class_weights = utils.get_class_weights(Y_train_ohe=y_train)
 class_weights = {i : class_weights[i] for i in range(15)}
 
+
+################RUN SUPERVISED PCA###################
+
+bspca = None
+bspca = BaseSupervisedPCA(model=LogisticRegression(multi_class="multinomial",
+                                              class_weight=class_weights,
+                                              solver='lbfgs'),
+                                              n_components=args["pca_components"])
+
+X = bspca.subset_features(x_train,
+                 _scores_balanced,
+                 args["top_features"])
+
+
+bspca.fit(X,np.argmax(y_train, axis=1))
+
+
+################GET SUPERVISED PCA TRANSFORMATIONS###################
+
+x_train_transformed = bspca.get_transformed_data(X)
+
+x_test_subset = bspca.subset_features(x_test,
+                 _scores_balanced,
+                 args["top_features"])
+
+x_test_transformed = bspca.get_transformed_data(x_test_subset)
+
+X_predict_subset = bspca.subset_features(X_predict.to_numpy(),
+                 _scores_balanced,
+                 top)
+
+X_predict_transformed = bspca.get_transformed_data(X_predict_subset)
+
+################RUN STANN###################
+
+model = STANN(act_fun='tanh',
+              first_dense=160,
+              second_dense=145.0,
+              learning_rate=0.01,input_dim=x_train_transformed.shape[1],
+              output_dim=len(adata_train.obs.celltype.unique()))
+
+
 es = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
                                       mode='min', 
                                       verbose=1,
                                       patience=30)
 
-history = model.fit(x_train, 
+history = model.fit(x_train_transformed, 
                     y_train, 
-                    validation_data=(x_test, y_test),
+                    validation_data=(x_test_transformed, y_test),
                     epochs=30,
                     class_weight=class_weights,
                     callbacks=[es],verbose=0)
@@ -156,8 +216,9 @@ utils.print_metrics(model=model,
                   x_test=x_test,
                   y_test=y_test)
 
+
 predictions = utils.make_predictions(model=model,
-                     X_predict=X_predict_scaled,
+                     X_predict=X_predict_transformed,
                      encoder=encoder,
                      adata_predict=adata_predict,
                      probabilities=False,
@@ -165,9 +226,6 @@ predictions = utils.make_predictions(model=model,
 
 
 ################ SAVE PREDICTIONS ###################
-
-if not os.path.exists(args["output"]):
-        os.makedirs(args["output"])
 
 predictions.to_csv(str(args["output"])+str(args["project"])+"_predictions.csv")
 
