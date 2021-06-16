@@ -4,6 +4,7 @@ outputs/
 test_notebooks/
 STANN/__pycache__/
 .ipynb_checkpoints/
+.vscode/
  STANN.code-workspace
 
 # OS generated files #
