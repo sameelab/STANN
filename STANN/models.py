@@ -14,10 +14,7 @@ francisco.grisanticanozo@bcm.edu
 Date: 12/2019
 
 """
-from numpy.random import seed
-seed(123)
-from tensorflow import set_random_seed
-set_random_seed(234)
+
 
 import numpy as np
 import os
@@ -31,6 +28,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import PCA
 from sklearn.base import RegressorMixin
 from sklearn.base import ClassifierMixin
+
+
+#Reproducibility
+seed = 10
+np.random.seed(seed)
+tf.random.set_seed(seed)
 
 def STANN(act_fun='relu',
                  first_dense=200,
