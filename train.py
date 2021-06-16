@@ -193,7 +193,7 @@ x_test_transformed = bspca.get_transformed_data(x_test_subset)
 
 X_predict_subset = bspca.subset_features(X_predict.to_numpy(),
                  _scores_balanced,
-                 top)
+                 args["top_features"])
 
 X_predict_transformed = bspca.get_transformed_data(X_predict_subset)
 
