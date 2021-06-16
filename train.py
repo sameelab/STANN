@@ -169,6 +169,9 @@ bspca = BaseSupervisedPCA(model=LogisticRegression(multi_class="multinomial",
                                               solver='lbfgs'),
                                               n_components=args["pca_components"])
 
+_scores,_scores_balanced = bspca.rank_features(np.array(X_train),
+                                                             Y_train_dummy,
+                                                             class_weights)
 X = bspca.subset_features(x_train,
                  _scores_balanced,
                  args["top_features"])
@@ -232,6 +235,8 @@ predictions = utils.make_predictions(model=model,
 ################ SAVE PREDICTIONS ###################
 
 predictions.to_csv(str(args["output"])+str(args["project"])+"_predictions.csv")
+_scores_balanced_pd.to_csv(str(args["output"])+str(args["project"])+'_features_scores_balanced.csv')
+_scores_pd.to_csv(str(args["output"])+str(args["project"])+'_features_scores.csv')
 
 ################ SAVE MODEL ###################
 
