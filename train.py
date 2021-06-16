@@ -158,6 +158,7 @@ x_train, x_test, y_train, y_test = utils.get_train_test_split(X_train_scaled,
                                                     test_size=0.10, 
                                                     random_state=40)
 
+print(y_train)
 class_weights = utils.get_class_weights(Y_train_ohe=y_train)
 class_weights = {i : class_weights[i] for i in range(len(Y_train.unique()))}
 
