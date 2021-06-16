@@ -19,11 +19,13 @@ Date: 12/2019
 import numpy as np
 import os
 import sys
+import tqdm
+import pandas as pd
+import sklearn
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import PCA
 from sklearn.base import RegressorMixin

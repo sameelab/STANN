@@ -29,6 +29,7 @@ import sys
 import pandas as pd
 import warnings
 import sklearn
+import tqdm
 from sklearn.utils import class_weight
 from sklearn.metrics import roc_auc_score
 import scanpy as sc
