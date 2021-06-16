@@ -159,7 +159,7 @@ x_train, x_test, y_train, y_test = utils.get_train_test_split(X_train_scaled,
                                                     random_state=40)
 
 class_weights = utils.get_class_weights(Y_train_ohe=y_train)
-class_weights = {i : class_weights[i] for i in range(len(Y_train.unique())))}
+class_weights = {i : class_weights[i] for i in range(len(Y_train.unique()))}
 
 
 ################RUN SUPERVISED PCA###################
