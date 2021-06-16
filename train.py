@@ -202,9 +202,11 @@ X_predict_transformed = bspca.get_transformed_data(X_predict_subset)
 model = STANN(act_fun='tanh',
               first_dense=160,
               second_dense=145.0,
-              learning_rate=0.01,input_dim=x_train_transformed.shape[1],
+              learning_rate=0.01,
+              input_dim=x_train_transformed.shape[1],
               output_dim=len(adata_train.obs.celltype.unique()))
 
+print(model)
 
 es = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
                                       mode='min', 
@@ -219,9 +221,9 @@ history = model.fit(x_train_transformed,
                     callbacks=[es],verbose=0)
 
 utils.print_metrics(model=model,
-                  x_train=x_train,
+                  x_train=x_train_transformed,
                   y_train=y_train,
-                  x_test=x_test,
+                  x_test=x_test_transformed,
                   y_test=y_test)
 
 
