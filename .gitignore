@@ -1,0 +1,15 @@
+# Ignore this folder
+data/
+outputs/
+test_notebooks/
+STANN/__pycache__/
+.ipynb_checkpoints/
+ STANN.code-workspace
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+*.DS_Store
+*.pyc
+STANN/__pycache__
