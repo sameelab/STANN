@@ -36,6 +36,10 @@ import anndata
 import tensorflow as tf
 import tensorflow.keras as keras
 import scanpy as sc
+from sklearn.linear_model import LogisticRegression
+from sklearn.decomposition import PCA
+from sklearn.base import RegressorMixin
+from sklearn.base import ClassifierMixin
 
 # local functions
 from STANN.models import STANN, BaseSupervisedPCA
