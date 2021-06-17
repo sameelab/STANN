@@ -173,6 +173,13 @@ bspca = BaseSupervisedPCA(model=LogisticRegression(multi_class="multinomial",
 _scores,_scores_balanced = bspca.rank_features(np.array(X_train),
                                                              Y_train_dummy,
                                                              class_weights)
+
+_scores_balanced_pd = pd.DataFrame({'index_position':np.arange(0,np.array(X_train).shape[1]),
+              '_scores': _scores_balanced})
+
+_scores_pd = pd.DataFrame({'index_position':np.arange(0,np.array(X_train).shape[1]),
+              '_scores': _scores})   
+                                                        
 X = bspca.subset_features(x_train,
                  _scores_balanced,
                  args["top_features"])

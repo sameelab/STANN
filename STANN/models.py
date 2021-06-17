@@ -158,12 +158,7 @@ class BaseSupervisedPCA(object):
                         X,
                         _scores,
                         top=5000):
-        
-        
-        _scores_pd = pd.DataFrame({'index_position':np.arange(0,X.shape[1]),
-              '_scores_balanced': _scores})
-        
-        _leaveouts = list(_scores_pd.sort_values(by='_scores_balanced',ascending=True)[:X.shape[1]-top].index_position)
+
         
         
         dummy_X=X[:,np.newaxis]
