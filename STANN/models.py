@@ -174,7 +174,7 @@ class BaseSupervisedPCA(object):
             
         
             
-        if(len(_leaveouts)==dummy_X.shape[2]):
+        elif(len(_leaveouts)==dummy_X.shape[2]):
             raise ValueError('The total number of features to be left out is equal to the total number of features. Please try with a smaller threshold value.')
             
         
