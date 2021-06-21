@@ -179,7 +179,7 @@ _scores_balanced_pd = pd.DataFrame({'index_position':np.arange(0,np.array(X_trai
 
 _scores_pd = pd.DataFrame({'index_position':np.arange(0,np.array(X_train).shape[1]),
               '_scores': _scores})   
-                                                        
+
 X = bspca.subset_features(x_train,
                  _scores_balanced,
                  args["top_features"])
@@ -198,7 +198,7 @@ x_test_subset = bspca.subset_features(x_test,
 
 x_test_transformed = bspca.get_transformed_data(x_test_subset)
 
-X_predict_subset = bspca.subset_features(X_predict.to_numpy(),
+X_predict_subset = bspca.subset_features(X_predict_scaled,
                  _scores_balanced,
                  args["top_features"])
 
