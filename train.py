@@ -122,6 +122,14 @@ ap.add_argument(
     help="Number of top features to select"
 )
 
+ap.add_argument(
+    "-epochs",
+    "--epochs",
+    type=int,
+    default=30,
+    help="Number of top features to select"
+)
+
 args = vars(ap.parse_args())
 
 
@@ -137,7 +145,6 @@ adata_train = sc.read_h5ad(args["data_train"])
 
 print("[INFO] loading predict data...")
 adata_predict = sc.read_h5ad(args["data_predict"])
-
 
 
 ################TRAIN TEST SPLIT###################
@@ -223,7 +230,7 @@ es = tf.keras.callbacks.EarlyStopping(monitor='accuracy',
 history = model.fit(x_train_transformed, 
                     y_train, 
                     validation_data=(x_test_transformed, y_test),
-                    epochs=30,
+                    epochs=args["epochs"],
                     class_weight=class_weights,
                     callbacks=[es],verbose=0)
 
