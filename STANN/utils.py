@@ -37,6 +37,23 @@ def print_model(choice):
     else:
         print("choose 'summary' or 'plot' output")
 
+def get_shared_objects(adata_train=None,adata_predict=None):
+    
+    try:
+        #get shared genes
+        shared_genes = list(set(adata_train.var.index).intersection(set(adata_predict.var.index)))
+        print(f'[INFO] {len(shared_genes)} shared genes')
+        
+        #subset objects
+        adata_train = adata_train[:,shared_genes]
+        adata_predict = adata_predict[:,shared_genes]
+        
+        return adata_train, adata_predict
+        
+        
+    except:
+        print("Failed -- No Shared Genes Between Objects?")
+
 
 
 def organize_data(adata_train=None,adata_predict=None):
