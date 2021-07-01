@@ -74,26 +74,6 @@ def STANN(act_fun='relu',
 class BaseSupervisedPCA(object):
     """
     Supervised PCA algorithm proposed by Bair et al. (2006).
-    
-    
-    Parameters
-    ----------
-    
-    fit_intercept : boolean, optional
-        whether to calculate the intercept for this model. If set
-        to false, no intercept will be used in calculations
-        (e.g. data is expected to be already centered).
-        
-    model : The supervised learning model that will be used to conduct supervised PCA.
-    
-    Attributes
-    ----------
-        
-    
-    References
-    ----------
-    Bair, Eric, et al. "Prediction by supervised principal components." Journal of the American Statistical Association 101.473 (2006).
-    
     """
     
     def __init__(self, 
@@ -133,11 +113,6 @@ class BaseSupervisedPCA(object):
             
             current_X=dummy_X[:,:,i]
             self._model.fit(current_X, y)
-            #the all([]) syntax is there in order to support both linear and logistic
-            #regression. Logistic regression coefficients for multiclass problems
-            #come in multi-dimensional arrays.
-            #print(self._model.coef_)
-            
             self._model.predict(current_X)
             
             #print(current_X.shape)
@@ -179,17 +154,7 @@ class BaseSupervisedPCA(object):
             
         
         return dummy_X
-        
 
-        
-    #def subset_feature(self,X,y,)
-    #
-    #    #delete the variables that were below the threshold
-    #    if(len(self._leavouts)>0):
-    #        dummy_X=np.delete(dummy_X,self._leavouts,2)
-    #    
-    #    return 
-    
     def fit(self,X,y):
         """
         Fit the supervised PCA model
