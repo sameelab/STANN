@@ -90,7 +90,18 @@ conda activate STANN
 Run model on your data
 
 ```sh
-python train.py --model STANN --data_train ./path_to_training_data/data.h5ad --data_predict ./path_to_predict_data/data.h5ad --output ./path_to_output/ --project name_of_project
+
+python ../STANN/train.py 
+      --model STANN \
+      --epochs 50 
+      --pca_components 100 
+      --top_features 8000 
+      --data_train ./path_to_training_data/data.h5ad \
+      --data_predict ./path_to_predict_data/data.h5ad \
+      --output ./path_to_output/ \
+      --project Name_of_Project
+
+
 ```
 
 ## Demo
@@ -129,6 +140,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact
 
 Francisco Grisanti - francisco.grisanticanozo@bcm.edu
+Dr. Hassan Samee - samee@bcm.edu
 
 Project Link: [https://github.com/sameelab/STANN](https://github.com/sameelab/STANN)
 
